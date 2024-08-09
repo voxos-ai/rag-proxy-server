@@ -1,0 +1,1 @@
+from ingestion_server.utils.log import configure_logger
