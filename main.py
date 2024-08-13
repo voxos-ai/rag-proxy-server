@@ -5,7 +5,6 @@ import dotenv
 from fastapi import FastAPI, File, UploadFile, Form
 from typing import Dict, Any, Optional, Union
 
-from . import RAGFactory
 import uvicorn
 
 from embeddings import EmbedProviders
