@@ -1,9 +1,9 @@
-from bolna.ingestion_server.embeddings import EmbedProviders
-from bolna.ingestion_server.rags import RAGProviders, BaseRAG
-from bolna.ingestion_server.datachecks import RAGConfig, RAGTask, RAGTaskStatus
+from embeddings import EmbedProviders
+from rags import RAGProviders, BaseRAG
+from datachecks import RAGConfig, RAGTask, RAGTaskStatus
 import asyncio
 from threading import Thread
-from bolna.ingestion_server.utils import configure_logger
+from utils import configure_logger
 from typing import Dict
 from uuid import uuid4
 import tempfile

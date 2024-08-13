@@ -6,8 +6,8 @@ import dotenv
 from fastapi import FastAPI, File, UploadFile, Form
 from typing import Dict, Any, Optional, Union
 
-from bolna.ingestion_server.datachecks import RAGConfig
-from bolna.ingestion_server import RAGFactory
+from datachecks import RAGConfig
+from . import RAGFactory
 import uvicorn
 
 dotenv.load_dotenv()

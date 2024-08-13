@@ -1,9 +1,9 @@
 from typing import Any, Coroutine
-from bolna.ingestion_server.embeddings.base import BaseEmbed
-from bolna.ingestion_server.rags.base import BaseRAG
+from embeddings.base import BaseEmbed
+from rags.base import BaseRAG
 from llama_index.vector_stores.lancedb import LanceDBVectorStore
 from llama_index.core import VectorStoreIndex, StorageContext
-from bolna.ingestion_server.datachecks import ProviderConfig, LanceDBConfig
+from datachecks import ProviderConfig, LanceDBConfig
 from llama_index.core.retrievers import VectorIndexRetriever
 
 class LanceDB(BaseRAG):

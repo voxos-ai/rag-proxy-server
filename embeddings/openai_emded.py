@@ -1,4 +1,4 @@
-from bolna.ingestion_server.embeddings.base import BaseEmbed
+from embeddings.base import BaseEmbed
 from llama_index.embeddings.openai import OpenAIEmbedding
 import dotenv
 import os

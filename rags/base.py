@@ -11,8 +11,8 @@ from llama_index.core.node_parser import (
 from llama_index.llms.openai import OpenAI
 from llama_index.core import Settings
 
-from bolna.ingestion_server.embeddings import BaseEmbed
-from bolna.ingestion_server.utils import configure_logger
+from embeddings import BaseEmbed
+from utils import configure_logger
 
 
 dotenv.load_dotenv()

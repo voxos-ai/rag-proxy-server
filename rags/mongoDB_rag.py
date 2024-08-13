@@ -2,9 +2,9 @@ from typing import Any, Coroutine
 from pymongo import MongoClient
 from llama_index.vector_stores.mongodb import MongoDBAtlasVectorSearch
 
-from bolna.ingestion_server.embeddings.base import BaseEmbed
-from bolna.ingestion_server.rags.base import BaseRAG
-from bolna.ingestion_server.datachecks import ProviderConfig, MongoDBConfig
+from embeddings.base import BaseEmbed
+from rags.base import BaseRAG
+from datachecks import ProviderConfig, MongoDBConfig
 
 from llama_index.core import VectorStoreIndex, StorageContext
 from llama_index.core.retrievers import VectorIndexRetriever
