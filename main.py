@@ -23,8 +23,6 @@ logger = configure_logger(__name__)
 dotenv.load_dotenv()
 DB: Dict[str, RAGConfig] = {}
 
-rag_factory = RAGFactory()
-app = FastAPI()
 
 
 class RAG:
@@ -191,6 +189,9 @@ class RAGFactory:
         """
         rag = self.RAGS[rag_name]
         return await rag.VectorDB.get_docs_index(query=query, index=index)
+
+rag_factory = RAGFactory()
+app = FastAPI()
 
 @app.get("/")
 def heartbeat() -> float:
