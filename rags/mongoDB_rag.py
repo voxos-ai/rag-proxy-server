@@ -57,7 +57,7 @@ class MongoDB(BaseRAG):
             self.client,
             db_name=self.config.db,
             collection_name=self.config.collection_name,
-            vector_index_name=index
+            vector_index_name=self.config.index
         )
         vector_store_context = StorageContext.from_defaults(vector_store=vector_store)
         vector_store_index = VectorStoreIndex(nodes=[], storage_context=vector_store_context)
@@ -84,13 +84,13 @@ class MongoDB(BaseRAG):
         Returns:
             str: The name of the created index.
         """
-        index = self.generate_index_name()
+        # index = self.generate_index_name()
         vector_store = MongoDBAtlasVectorSearch(
             self.client,
             db_name=self.config.db,
             collection_name=self.config.collection_name,
-            index_name=index
+            index_name=self.config.index
         )
         vector_store_context = StorageContext.from_defaults(vector_store=vector_store)
         vector_store_index = VectorStoreIndex(nodes=nodes, storage_context=vector_store_context, embed_model=self.embeding_model)
-        return index
+        return self.config.index

@@ -11,6 +11,7 @@ class LanceDBConfig(BaseModel):
     loc: Optional[str] = ""
 
 class MongoDBConfig(BaseModel):
+    index: Optional[str] = ""
     uri: Optional[str] = ""
     db: Optional[str] = ""
     collection_name: Optional[str] = ""
