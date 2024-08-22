@@ -85,5 +85,3 @@ class LanceDB(BaseRAG):
         query_engine = VectorIndexRetriever(vector_index, similarity_top_k=self.similarity_top_k)
         return query_engine.retrieve(query)
 
-        # query_engine = vector_index.as_query_engine(llm=self.llm)
-

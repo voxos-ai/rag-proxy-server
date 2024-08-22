@@ -25,6 +25,7 @@ class ProviderConfig(BaseModel):
     worker:int
     similarity_top_k:int
     rag: Union[MongoDBConfig, LanceDBConfig] = Field(union_mode="left_to_right")
+
     @root_validator(pre=True)
     def check_config_type(cls, values):
         config = values.get('rag')
@@ -34,6 +35,7 @@ class ProviderConfig(BaseModel):
             else:
                 values['rag'] = LanceDBConfig(**config)
         return values
+        
 # Rag Config
 class RAGConfig(BaseModel):
     provider:str
