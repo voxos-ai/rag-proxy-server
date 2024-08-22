@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, root_validator
 from typing import Union, Optional
 
 # Embedding config
@@ -11,6 +11,7 @@ class LanceDBConfig(BaseModel):
     loc: Optional[str] = ""
 
 class MongoDBConfig(BaseModel):
+    
     index: Optional[str] = ""
     uri: Optional[str] = ""
     db: Optional[str] = ""
@@ -23,8 +24,16 @@ class ProviderConfig(BaseModel):
     overlapping:int
     worker:int
     similarity_top_k:int
-    rag: Union[LanceDBConfig,MongoDBConfig]
-
+    rag: Union[MongoDBConfig, LanceDBConfig] = Field(union_mode="left_to_right")
+    @root_validator(pre=True)
+    def check_config_type(cls, values):
+        config = values.get('rag')
+        if isinstance(config, dict):
+            if 'uri' in config and 'collection_name' in config:
+                values['rag'] = MongoDBConfig(**config)
+            else:
+                values['rag'] = LanceDBConfig(**config)
+        return values
 # Rag Config
 class RAGConfig(BaseModel):
     provider:str

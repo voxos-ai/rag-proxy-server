@@ -16,11 +16,12 @@ from utils import configure_logger
 from uuid import uuid4
 import tempfile
 import os
+import json
 
 logger = configure_logger(__name__)
 
 
-dotenv.load_dotenv()
+dotenv.load_dotenv(".env")
 DB: Dict[str, RAGConfig] = {}
 
 
@@ -244,8 +245,11 @@ async def make_rag(
     """
     try:
         # Parse the JSON string into a RAGConfig object
-        rag_config = RAGConfig.parse_raw(config)
+        config = json.loads(config)
+        print(config)
+        rag_config = RAGConfig(**config)
         
+        print(rag_config)
         # Create RAG configuration
         rag_id = rag_factory.make_rag(rag_config)
         logging.info(f"Rag id {rag_id}")
