@@ -1,3 +1,5 @@
+fastapi==0.108.0
+python-dotenv==1.0.0
 pylance==0.16.0
 pymongo==4.8.0
 python-multipart==0.0.6
@@ -5,3 +7,4 @@ llama-index==0.10.65
 llama-index-vector-stores-lancedb==0.1.7
 llama-index-vector-stores-mongodb==0.1.8
 llama-index-llms-openai==0.1.29
+uvicorn==0.22.0

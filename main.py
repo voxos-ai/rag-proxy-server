@@ -25,7 +25,6 @@ dotenv.load_dotenv(".env")
 DB: Dict[str, RAGConfig] = {}
 
 
-
 class RAG:
     """
     Retrieval-Augmented Generation (RAG) implementation.
@@ -103,7 +102,7 @@ class RAGFactory:
         """Initialize the RAGFactory."""
         self.RAGS: Dict[str, RAG] = dict()
 
-    def make_rag(self, config: RAGConfig):
+    def make_rag(self, config: RAGConfig, rag_id: str=None):
         """
         Create a new RAG instance.
 
@@ -113,7 +112,7 @@ class RAGFactory:
         Returns:
             str: Unique identifier for the created RAG instance.
         """
-        rag_name = f"RAG-{uuid4()}"
+        rag_name = uuid4() if not rag_id else rag_id
         embedding_name = EmbedProviders[config.provider_config.embedding_name.provider](config.provider_config.embedding_name.embedding_model_name)
         vector_db = RAGProviders[config.provider](embedding_name, config.provider_config)
         rag = RAG(vector_db, config.provider_config.worker)
@@ -191,8 +190,10 @@ class RAGFactory:
         rag = self.RAGS[rag_name]
         return await rag.VectorDB.get_docs_index(query=query, index=index)
 
+
 rag_factory = RAGFactory()
 app = FastAPI()
+
 
 @app.get("/")
 def heartbeat() -> float:
@@ -203,7 +204,8 @@ def heartbeat() -> float:
 @app.post("/make-rag")
 async def make_rag(
     file: UploadFile = File(...),
-    config: str = Form(...)
+    config: str = Form(...),
+    rag_id: str = Form(None)
 ) -> Dict[str, Any]:
     """
     Create a RAG configuration, return its ID, and ingest the uploaded file.
@@ -223,13 +225,13 @@ async def make_rag(
         logger.info(f"RAG Config : {rag_config}")
         
         # Create RAG configuration
-        rag_id = rag_factory.make_rag(rag_config)
-        logging.info(f"Rag id {rag_id}")
+        rag_name = rag_factory.make_rag(rag_config, rag_id)
+        logging.info(f"Rag name {rag_name}")
         # Ingest the file
-        task = await rag_factory.file_ingest(rag_name=rag_id, file=file)
+        task = await rag_factory.file_ingest(rag_name=rag_name, file=file)
         
         return {
-            "rag_id": rag_id,
+            "rag_id": rag_name,
             "index": task._index,
             "status": task._status,
             "message": "RAG created and file ingested successfully"
@@ -242,6 +244,7 @@ async def make_rag(
             "status": "ERROR",
             "message": "Invalid JSON in config parameter"
         }
+
 
 @app.get("/rag-retrive/{rag_id}/{index}")
 async def rag_retrive(query: str, rag_id: str, index: str) -> list:
