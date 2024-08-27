@@ -16,11 +16,12 @@ from utils import configure_logger
 from uuid import uuid4
 import tempfile
 import os
+import json
 
 logger = configure_logger(__name__)
 
 
-dotenv.load_dotenv()
+dotenv.load_dotenv(".env")
 DB: Dict[str, RAGConfig] = {}
 
 
@@ -199,34 +200,6 @@ def heartbeat() -> float:
     return time.time()
 
 
-@app.post("/create-rag")
-def create_rag(request: RAGConfig) -> Dict[str, str]:
-    """Create a RAG configuration and return its ID.
-    Args:
-        request (RAGConfig): The RAG configuration to create.
-    Returns:
-        Dict[str, str]: A dictionary containing the created RAG ID.
-    """
-    print(request)
-    rag_id = rag_factory.make_rag(request)
-    return {"rag_id": rag_id}
-
-
-@app.post("/rag-upload-file/{rag_id}")
-async def rag_upload_file(file: UploadFile, rag_id: str) -> Dict[str, str]:
-    """Upload a file for a specific RAG ID.
-    Args:
-        file (UploadFile): The file to upload.
-        rag_id (str): The ID of the RAG to associate with the file.
-    Returns:
-        Dict[str, str]: A dictionary containing the upload status and index.
-    """
-    try:
-        task = await rag_factory.file_ingest(rag_name=rag_id, file=file)
-        return {"index": task._index, "status": task._status, "message": "DONE"}
-    except Exception as e:
-        return {"index": None, "status": "ERROR", "message": f"{e}"}
-
 @app.post("/make-rag")
 async def make_rag(
     file: UploadFile = File(...),
@@ -244,7 +217,10 @@ async def make_rag(
     """
     try:
         # Parse the JSON string into a RAGConfig object
-        rag_config = RAGConfig.parse_raw(config)
+        config = json.loads(config)
+        logger.info(f"Config : {config}")
+        rag_config = RAGConfig(**config)
+        logger.info(f"RAG Config : {rag_config}")
         
         # Create RAG configuration
         rag_id = rag_factory.make_rag(rag_config)
